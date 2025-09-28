@@ -1,22 +1,26 @@
-local options = {
-  formatters_by_ft = {
-    lua = { "stylua" },
-    css = { "prettier" },
-    html = { "prettier" },
-    python = {
-      "ruff_format",
-    },
-    nix = { "nixfmt" },
-    docker = { "hadolint" },
-    json = { "jq" },
-    cpp = { "clang-format" },
-  },
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+		css = { "prettier" },
+		html = { "prettier" },
+		python = { "ruff_format" },
+		nix = { "nixfmt" },
+		docker = { "hadolint" },
+		json = { "prettier" },
+		cpp = { "clang-format" },
+	},
 
-  format_on_save = {
-    -- These options will be passed to conform.format()
-    timeout_ms = 500,
-    lsp_fallback = true,
-  },
-}
+	format_on_save = {
+		timeout_ms = 500,
+		lsp_fallback = true,
+	},
+})
 
-return options
+-- ручне форматування через <leader>f
+vim.keymap.set("n", "<leader>f", function()
+	require("conform").format({
+		lsp_fallback = true,
+		async = false,
+		timeout_ms = 500,
+	})
+end, { desc = "Format file with conform" })

@@ -1,137 +1,44 @@
-require("nvchad.configs.lspconfig").defaults()
+local lspconfig = require("lspconfig")
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	callback = function(ev)
+		-- Enable completion triggered by <c-x><c-o>
+		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
--- read :h vim.lsp.config for changing options of lsp servers
--- local lspconfig = vim.lsp.config
--- local lspconfig = require "lspconfig"
-
--- typos-lsp
-vim.lsp.config("typos_lsp", {
-  init_options = {
-    diagnosticSeverity = "Hint",
-  },
-})
-vim.lsp.enable "typos-lsp"
-
--- pyright
-vim.lsp.config("pyright", {
-  settings = {
-    pyright = {
-      disableOrganizeImports = true,
-    },
-    python = {
-      analysis = {
-        ignore = { "*" }, -- Ruff бере на себе lint
-      },
-    },
-  },
-})
-vim.lsp.enable "pyright"
-
--- clangd
-vim.lsp.config("clangd", {
-  cmd = {
-    "clangd",
-    "--offset-encoding=utf-16",
-    "--header-insertion=iwyu",
-    "--background-index",
-    "--clang-tidy",
-    "--all-scopes-completion",
-    "--completion-style=detailed",
-    "--function-arg-placeholders",
-    "--fallback-style=llvm",
-    "-j=6",
-  },
-  on_attach = function(_, bufnr)
-    vim.keymap.set(
-      "n",
-      "gh",
-      "<cmd>ClangdSwitchSourceHeader<CR>",
-      { desc = "Switch Source/Header (C/C++)", buffer = bufnr }
-    )
-  end,
-  init_options = {
-    usePlaceholders = true,
-    completeUnimported = true,
-    clangdFileStatus = true,
-  },
-})
-vim.lsp.enable "clangd"
-
--- cssls
-vim.lsp.config("cssls", {
-  cmd = { "vscode-css-language-server", "--stdio" },
-  filetypes = { "css", "scss", "less" },
-  settings = {
-    css = { validate = true },
-    less = { validate = true },
-    scss = { validate = true },
-  },
-})
-vim.lsp.enable "cssls"
-
-vim.lsp.config("html", {
-  cmd = { "vscode-html-language-server", "--stdio" },
-  filetypes = { "html" },
-})
-vim.lsp.enable "html"
-
--- vim.lsp.config("emmet_language_server", {
---   cmd = { "emmet-language-server", "--stdio" },
---   filetypes = { "html" },
--- })
-
-vim.lsp.config("tsserver", {
-  cmd = { "typescript-language-server", "--stdio" },
-  filetypes = {
-    "javascript",
-    "javascriptreact",
-    "javascript.jsx",
-    "typescript",
-    "typescriptreact",
-    "typescript.tsx",
-  },
-  root_dir = vim.fs.dirname(
-    vim.fs.find({ "package.json", "tsconfig.json", "jsconfig.json", ".git" }, { upward = true })[1]
-  ),
-})
-vim.lsp.enable "tsserver"
-
--- Nix LSP (nixd або nil_ls, залежно від того, що ти ставиш)
-vim.lsp.enable("nixd", {
-  cmd = { "nixd" },
-  filetypes = { "nix" },
+		-- Buffer local mappings.
+		-- See `:help vim.lsp.*` for documentation on any of the below functions
+		local opts = { buffer = ev.buf }
+		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+		vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+		vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
+		vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
+		vim.keymap.set("n", "<space>wl", function()
+			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+		end, opts)
+		vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, opts)
+		vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
+		vim.keymap.set({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, opts)
+		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+		vim.keymap.set("n", "<space>f", function()
+			vim.lsp.buf.format({ async = true })
+		end, opts)
+	end,
 })
 
--- Shell LSP (bashls)
-vim.lsp.enable("bashls", {
-  cmd = { "bash-language-server", "start" },
-  filetypes = { "sh", "bash" },
-})
-
--- JSON LSP
-vim.lsp.enable("jsonls", {
-  cmd = { "vscode-json-language-server", "--stdio" },
-  filetypes = { "json", "jsonc" },
-})
-
--- Dockerfile LSP
-vim.lsp.enable("dockerls", {
-  cmd = { "docker-langserver", "--stdio" },
-  filetypes = { "dockerfile" },
-})
-
--- keymaps
-vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
-vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-
--- inlay hints (Neovim 0.10+)
-if vim.lsp.inlay_hint then
-  vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
-      if client and client.server_capabilities.inlayHintProvider then
-        vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
-      end
-    end,
-  })
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { "basedpyright", "clangd" }
+for _, lsp_server in ipairs(servers) do
+	vim.lsp.enable(lsp_server)
 end
