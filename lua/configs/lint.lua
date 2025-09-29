@@ -9,6 +9,7 @@ lint.linters_by_ft = {
 
 -- кастомні команди (якщо треба)
 lint.linters.ruff = {
+	cmd = "ruff",
 	args = {
 		"--select=E,F,UP,N,I,ASYNC,S,PTH",
 		"--ignore=E112",
@@ -18,10 +19,10 @@ lint.linters.ruff = {
 	},
 	stdin = true,
 }
-lint.linters.eslint_d = { cmd = "eslint_d" }
-lint.linters.luacheck = { cmd = "luacheck" }
-lint.linters.statix = { cmd = "statix" }
-
+-- lint.linters.eslint_d = { cmd = "eslint_d" }
+-- lint.linters.luacheck = { cmd = "luacheck" }
+-- lint.linters.statix = { cmd = "statix" }
+--
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 	callback = function()
 		require("lint").try_lint()
