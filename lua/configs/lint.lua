@@ -4,27 +4,21 @@ lint.linters_by_ft = {
 	python = { "ruff" },
 	javascript = { "eslint_d" },
 	typescript = { "eslint_d" },
-	nix = { "statix" },
+	-- nix = { "statix" },
 }
 
 -- кастомні команди (якщо треба)
-lint.linters.ruff = {
-	cmd = "ruff",
-	args = {
-		"--select=E,F,UP,N,I,ASYNC,S,PTH",
-		"--ignore=E112",
-		"--line-length=79",
-		"--respect-gitignore",
-		"--target-version=py311",
-	},
-	stdin = true,
-}
--- lint.linters.eslint_d = { cmd = "eslint_d" }
--- lint.linters.luacheck = { cmd = "luacheck" }
--- lint.linters.statix = { cmd = "statix" }
 --
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+
+local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+	group = lint_augroup,
 	callback = function()
-		require("lint").try_lint()
+		lint.try_lint()
 	end,
 })
+
+vim.keymap.set("n", "<leader>l", function()
+	lint.try_lint()
+end, { desc = "Trigger linting for current file" })
