@@ -80,27 +80,35 @@ return {
 				},
 			})
 
+			local lsp_servers = {
+				"pyright", -- Python
+				"bashls", -- Bash
+				"tsserver", -- JavaScript / TypeScript
+				"html", -- HTML
+				"cssls", -- CSS
+				"clangd", -- C / C++
+				"nixd", -- Nix
+			}
+
+			-- Форматери
+			local formatters = {
+				"stylua", -- Lua
+				"prettier", -- HTML / CSS / JS / JSON
+				"black", -- Python
+				"nixfmt", -- Nix
+				"clang-format", -- C / C++
+				"shfmt", -- Bash
+			}
+
+			mason_lspconfig.setup({
+				ensure_installed = lsp_servers,
+				automatic_installation = true,
+			})
+
 			mason_tool_installer.setup({
-				ensure_installed = {
-					"prettier", -- prettier formatter
-					"stylua", -- lua formatter
-					"isort", -- python formatter
-					"black", -- python formatter
-					"ruff", -- python linter
-					"eslint_d", -- js linter
-					"clangd",
-					"cmake",
-					"cssls",
-					"dockerls",
-					"bashls",
-					"jsonls",
-					"lua_ls",
-					"pyright",
-					"tsserver",
-					"html",
-					"emmet_language_server",
-					"nixd",
-				},
+				ensure_installed = tools,
+				auto_update = true,
+				run_on_start = true,
 			})
 		end,
 	},

@@ -49,7 +49,14 @@ vim.lsp.config("pyright", {
 	},
 })
 
-local servers = { "pyright", "clangd", "prettier", "cssls", "html" }
+local servers = {
+  "pyright",                 -- Python
+  "bashls",                  -- Bash
+  "tsserver",                -- JavaScript / TypeScript
+  "html",                    -- HTML
+  "cssls",                   -- CSS
+  "clangd",                  -- C / C++
+}
 for _, lsp_server in ipairs(servers) do
 	vim.lsp.enable(lsp_server)
 end
