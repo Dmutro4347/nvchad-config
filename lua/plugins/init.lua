@@ -68,6 +68,7 @@ return {
 			local mason = require("mason")
 
 			local mason_tool_installer = require("mason-tool-installer")
+      local mason_lspconfig = require("mason-lspconfig")
 
 			-- enable mason and configure icons
 			mason.setup({
@@ -83,11 +84,10 @@ return {
 			local lsp_servers = {
 				"pyright", -- Python
 				"bashls", -- Bash
-				"tsserver", -- JavaScript / TypeScript
+				"ts_ls", -- JavaScript / TypeScript
 				"html", -- HTML
 				"cssls", -- CSS
-				"clangd", -- C / C++
-				"nixd", -- Nix
+				"clangd" -- C / C++
 			}
 
 			-- Форматери
