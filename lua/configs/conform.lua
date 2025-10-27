@@ -3,6 +3,7 @@ require("conform").setup({
 		lua = { "stylua" },
 		css = { "prettier" },
 		html = { "prettier" },
+		javascript = { "prettier" },
 		python = { "ruff_format" },
 		nix = { "nixfmt" },
 		docker = { "hadolint" },

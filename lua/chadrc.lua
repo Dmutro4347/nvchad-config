@@ -15,10 +15,24 @@ M.base46 = {
 }
 
 M.nvdash = { load_on_startup = true }
--- M.ui = {
---       tabufline = {
---          lazyload = false
---      }
--- }
+M.ui = {
+	tabufline = {
+		lazyload = false,
+	},
 
+	override = {
+		["akinsho/bufferline.nvim"] = {
+			options = {
+				offsets = {
+					{
+						filetype = "neo-tree",
+						text = "File Explorer",
+						highlight = "Directory",
+						text_align = "left",
+					},
+				},
+			},
+		},
+	},
+}
 return M

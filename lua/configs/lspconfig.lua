@@ -38,7 +38,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "pyright", "clangd" }
+
+vim.lsp.config("pyright", {
+	settings = {
+		python = {
+			analysis = {
+				typeCheckingMode = "off", -- або "off", якщо хочеш зовсім вимкнути
+			},
+		},
+	},
+})
+
+local servers = { "pyright", "clangd", "prettier", "cssls", "html" }
 for _, lsp_server in ipairs(servers) do
 	vim.lsp.enable(lsp_server)
 end

@@ -1,4 +1,5 @@
 return {
+	{ "wakatime/vim-wakatime", lazy = false },
 	{
 		"stevearc/conform.nvim",
 		-- event = 'BufWritePre', -- uncomment for format on save
@@ -8,27 +9,14 @@ return {
 		end,
 	},
 
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		lazy = false,
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons", -- icons
-			"MunifTanjim/nui.nvim",
-		},
-		config = function()
-			require("configs.neotree")
-		end,
-	},
-
 	-- These are some examples, uncomment them if you want to see them work!
-	{
-		"mfussenegger/nvim-lint",
-		event = { "BufReadPre", "BufNewFile" },
-		config = function()
-			require("configs.lint")
-		end,
-	},
+	-- {
+	-- 	"mfussenegger/nvim-lint",
+	-- 	event = { "BufReadPre", "BufNewFile" },
+	-- 	config = function()
+	-- 		require("configs.lint")
+	-- 	end,
+	-- },
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
@@ -47,6 +35,9 @@ return {
 			"hrsh7th/cmp-calc",
 			"hrsh7th/cmp-emoji",
 		},
+		config = function()
+			require("configs.cmp")
+		end,
 	},
 	{
 		"norcalli/nvim-colorizer.lua",
@@ -58,8 +49,15 @@ return {
 	{
 		"christoomey/vim-tmux-navigator",
 		lazy = false,
+		cmd = {
+			"TmuxNavigateLeft",
+			"TmuxNavigateDown",
+			"TmuxNavigateUp",
+			"TmuxNavigateRight",
+			"TmuxNavigatePrevious",
+			"TmuxNavigatorProcessList",
+		},
 	},
-
 	{
 		"williamboman/mason.nvim",
 		dependencies = {
