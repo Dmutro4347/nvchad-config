@@ -98,6 +98,21 @@ return {
 				"nixfmt", -- Nix
 				"clang-format", -- C / C++
 				"shfmt", -- Bash
+				  -- Лінтери
+				  "ruff",
+				  "eslint_d",
+				  "stylelint",
+				  "htmlhint",
+				  "hadolint",
+				  "shellcheck",
+				  "statix",
+				  "luacheck",
+				  "clang-tidy",
+				  "cmakelint",
+				  "jsonlint",
+				
+				  -- JSON / YAML / etc (Mason pair)
+				  "yamlfix",
 			}
 
 			mason_lspconfig.setup({
